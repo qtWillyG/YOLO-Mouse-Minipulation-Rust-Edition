@@ -1,0 +1,39 @@
+[package]
+name = "yolomouse"
+version = "1.0.0"
+edition = "2021"
+description = "Move the cursor onto a YOLOv10-detected target, with smoothing."
+
+[dependencies]
+# GUI (egui is re-exported by eframe so versions can't drift)
+eframe = "0.29"
+# native file-open dialog for the model picker
+rfd = "0.15"
+
+# ONNX Runtime. `download-binaries` (default) fetches a CPU build at build time.
+# For GPU, build with: cargo build --release --features gpu
+ort = { version = "=2.0.0-rc.10" }
+
+# image preprocessing (detector only)
+image = "0.25"
+
+# screen capture
+xcap = "0.0.14"
+
+# serial port to the RP2040/RP2350
+serialport = "4.5"
+
+# Win32 for SendInput / cursor / keys
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[features]
+# Enable a DirectML GPU build of ONNX Runtime (any vendor on Windows).
+gpu = ["ort/directml"]
+
+[profile.release]
+opt-level = 3
+lto = true
